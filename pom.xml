@@ -12,20 +12,6 @@
 
     <build>
 
-        <resources>
-
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>java_icon.png</include>
-                </includes>
-                <!-- relative to target/classes
-                     i.e. ${project.build.outputDirectory} -->
-                <targetPath>../src/main/resources</targetPath>
-            </resource>
-
-        </resources>
-
         <plugins>
 
             <plugin>
