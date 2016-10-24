@@ -20,6 +20,7 @@ public class Main {
         options.addOption("p", "password", true, "Password.");
         options.addOption("r", "recipient", true, "Recipient email.");
         options.addOption("A", "attachment", true, "Path to file to be attached. If not passed - default attachment will be used.");
+        options.addOption("c", "count", true, "Number of messages to be read.");
         options.addOption(Option.builder("s").desc("Save attachments.").build());
 
         HelpFormatter formatter = new HelpFormatter();
@@ -54,8 +55,12 @@ public class Main {
                     }
                 } else if (action.equals(ACTION_READ)) {
                     if (requiredOption == null) {
+                        int count = 0;
+                        if (line.hasOption("c")) {
+                            count = Integer.parseInt(line.getOptionValue("c"));
+                        }
                         EmailReader emailReader = new EmailReader();
-                        emailReader.readEmails(username, password, line.hasOption("s"));
+                        emailReader.readEmails(username, password, line.hasOption("s"), count);
                     }
                 }
             }

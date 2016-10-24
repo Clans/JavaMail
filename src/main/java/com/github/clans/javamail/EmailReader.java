@@ -2,6 +2,7 @@ package com.github.clans.javamail;
 
 import javax.mail.*;
 import javax.mail.internet.MimeBodyPart;
+import javax.mail.search.FlagTerm;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,9 +15,12 @@ public class EmailReader {
 
     private int level = 0;
 
-    public void readEmails(String username, String password, boolean saveAttachments) {
+    public void readEmails(String username, String password, boolean saveAttachments, int count) {
         String host = "imap.gmail.com";
         try {
+
+            System.out.println(count > 0 ? "Fetching latest " + count + " emails..." : "Fetching all unread emails...");
+
             Properties props = new Properties();
             props.setProperty("mail.store.protocol", "imaps");
             props.setProperty("mail.imap.ssl.enable", "true");
@@ -38,15 +42,18 @@ public class EmailReader {
             int messageCount = inbox.getMessageCount();
 
             // Retrieve the messages from the folder in an array and print it
+            Message[] messages;
 
             // Retrieve all messages
-//            Message[] messages = inbox.getMessages();
+//            messages = inbox.getMessages();
 
-            // Retrieve only unread messages
-//            Message messages[] = inbox.search(new FlagTerm(new Flags(Flags.Flag.SEEN), false));
-
-            // Retrieve only 5 newest messages
-            Message[] messages = inbox.getMessages(messageCount - 3, messageCount);
+            if (count > 0) {
+                // Retrieve only 5 newest messages
+                messages = inbox.getMessages(messageCount - (count - 1), messageCount);
+            } else {
+                // Retrieve only unread messages
+                messages = inbox.search(new FlagTerm(new Flags(Flags.Flag.SEEN), false));
+            }
 
             System.out.println("Number of received emails: " + messages.length);
             System.out.println("Number of unread emails: " + inbox.getUnreadMessageCount());
